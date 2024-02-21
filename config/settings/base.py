@@ -82,6 +82,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     'query_counter',
     'django_filters',
+    'ckeditor',
 ]
 
 LOCAL_APPS = [

@@ -25,7 +25,11 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Company
-        fields = ('id', 'name', 'vacancy_count')
+        fields = (
+            'id',
+            'name',
+            'vacancy_count'
+        )
 
 
 class SpecializationTypeSerializer(serializers.ModelSerializer):
@@ -35,7 +39,13 @@ class SpecializationTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.SpecializationType
-        fields = ('id', 'title', 'min_price', 'max_price', 'openings')
+        fields = (
+            'id',
+            'title',
+            'min_price',
+            'max_price',
+            'openings'
+        )
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -46,14 +56,68 @@ class SpecializationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Specialization
-        fields = ('id', 'title', 'specializationtypes', 'spec_min_price',
-                  'spec_max_price', 'openings')
+        fields = (
+            'id',
+            'title',
+            'specializationtypes',
+            'spec_min_price',
+            'spec_max_price',
+            'openings'
+            )
+
+
+class CompanyJobSerializer(serializers.ModelSerializer):
+    district = serializers.StringRelatedField()
+
+    class Meta:
+        model = models.Company
+        fields = (
+            'id',
+            'name',
+            'logo',
+            'district',
+            'is_verified',
+        )
 
 
 class JobSerializer(serializers.ModelSerializer):
-    company = serializers.StringRelatedField()
+    company = CompanyJobSerializer()
     experience = serializers.StringRelatedField()
 
     class Meta:
         model = models.Job
-        fields = ('id', 'title', 'price_from', 'price_to', 'company', 'experience', 'is_top')
+        fields = (
+            'id',
+            'title',
+            'price_from',
+            'price_to',
+            'company',
+            'experience',
+            'is_top',
+            'additional_info'
+        )
+
+
+class JobDetailSerializer(serializers.ModelSerializer):
+    # similar_vacancies = JobSerializer(many=True)
+    company = CompanyJobSerializer()
+    experience = serializers.StringRelatedField()
+    employment_type = serializers.StringRelatedField()
+    required_skills = serializers.StringRelatedField(many=True)
+    district = serializers.StringRelatedField()
+
+    class Meta:
+        model = models.Job
+        fields = (
+            'id',
+            'title',
+            'district',
+            'price_from',
+            'price_to',
+            'experience',
+            'employment_type',
+            'additional_info',
+            'required_skills',
+            'company',
+            # 'similar_vacancies',
+        )

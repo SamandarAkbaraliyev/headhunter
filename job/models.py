@@ -1,19 +1,10 @@
 from django.db import models
 from django.utils.timezone import now
+from ckeditor.fields import RichTextField
 
 
 class CompanyBranch(models.Model):
     name = models.CharField(max_length=256)
-
-    def __str__(self):
-        return self.name
-
-
-class Company(models.Model):
-    name = models.CharField(max_length=256)
-    branch = models.ForeignKey(CompanyBranch, on_delete=models.SET_NULL, null=True)
-    logo = models.ImageField(upload_to='logos/', null=True)
-    is_featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -30,6 +21,18 @@ class District(models.Model):
     name = models.CharField(max_length=256)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='districts')
     neighboring_cities = models.ManyToManyField('self', blank=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=256)
+    branch = models.ForeignKey(CompanyBranch, on_delete=models.SET_NULL, null=True)
+    logo = models.ImageField(upload_to='logos/', null=True)
+    is_featured = models.BooleanField(default=False)
+    district = models.ForeignKey('District', on_delete=models.CASCADE, null=True)
+    is_verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -74,6 +77,13 @@ class WorkSchedule(models.Model):
         return self.title
 
 
+class Skill(models.Model):
+    title = models.CharField(max_length=225)
+
+    def __str__(self):
+        return self.title
+
+
 class Job(models.Model):
     title = models.CharField(max_length=256)
     published_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -92,6 +102,10 @@ class Job(models.Model):
 
     is_featured = models.BooleanField(default=False)
     is_top = models.BooleanField(default=False)
+
+    additional_info = RichTextField(null=True)
+    required_skills = models.ManyToManyField(Skill, blank=True)
+
 
     def __str__(self):
         return self.title

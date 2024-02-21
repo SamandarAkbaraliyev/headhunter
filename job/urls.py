@@ -7,6 +7,9 @@ urlpatterns = [
 
     path('featured/companies/', views.MainFeaturedCompanies.as_view()),
     path('job-list/', views.JobListAPIView.as_view()),
+
+    path('job/<int:pk>/', views.JobDetailAPIView.as_view()),
+    path('job/<int:pk>/similar/jobs/', views.SimilarJobsAPIView.as_view()),
 ]
 
 
